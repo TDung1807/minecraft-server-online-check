@@ -3,6 +3,12 @@
 Backend được triển khai tại selected Region `ap-southeast-1` (Singapore).
 Frontend được build và deploy từ GitHub Actions; AWS chỉ phục vụ API/health.
 
+- Website: https://tdung1807.github.io/minecraft-server-online-check/
+- API: https://d1998bjchbfps7.cloudfront.net/api/v1/status
+- SSE: https://d1998bjchbfps7.cloudfront.net/api/v1/events
+- CloudFront distribution: `EHW75Z6GO8CRA`.
+- Console: https://us-east-1.console.aws.amazon.com/cloudfront/v4/home?region=us-east-1#/distributions/EHW75Z6GO8CRA
+
 ## Tài nguyên
 
 - EC2: `i-0707ae5159eb45b12`, Amazon Linux 2023 ARM64, `t4g.small`.
@@ -36,7 +42,8 @@ CloudFront dùng pay-as-you-go, không có phí thuê cố định; traffic/requ
 phát sinh phí ngoài mức miễn phí áp dụng. Theo dõi chi phí thực tế tại
 AWS Settings > Billing và AWS Billing and Cost Management.
 
-**Sau ưu đãi, `t4g.small` tự tính giá On-Demand.** Cần đổi xuống `t4g.micro`
+**Sau ưu đãi, `t4g.small` tự tính giá On-Demand**, hiện là 0,0212 USD/giờ,
+khoảng 19,89 USD/tháng tổng compute + IPv4 + ổ đĩa. Cần đổi xuống `t4g.micro`
 trước khi ưu đãi hết nếu muốn giảm chi phí. Giá `t4g.micro` kiểm tra lúc triển khai:
 0,0106 USD/giờ tại Singapore, khoảng 7,74 USD/tháng phần compute.
 Thay đổi instance type cần stop/start; dữ liệu RAM/sequence sẽ reset.
@@ -55,7 +62,7 @@ Pages sử dụng GitHub Actions làm build source.
 Build local:
 
 ```sh
-API_BASE_URL=https://<distribution>.cloudfront.net python3 scripts/build-pages.py
+API_BASE_URL=https://d1998bjchbfps7.cloudfront.net python3 scripts/build-pages.py
 ```
 
 Output nằm ở `artifacts/pages`, được git-ignore. `config.js` chứa URL API public,
