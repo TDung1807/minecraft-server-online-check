@@ -89,3 +89,19 @@ restart service rồi kiểm tra REST/SSE. Giữ bản binary cũ để rollback
 
 Máy đơn: stop/restart hoặc lỗi máy sẽ gây gián đoạn ngắn. SSE reconnect nhận snapshot mới.
 Không tăng replica khi chưa có poller leader/fan-out chung.
+
+## Kiểm tra sau deploy — 03/10/2026
+
+- CloudFront distribution và VPC origin đều `Deployed`.
+- GitHub Pages workflow và CI `Verify` đều thành công; CI gồm race tests và build Docker.
+- `/health/ready`: HTTPS 200; `/api/v1/status`: HTTPS 200, Minecraft `online`.
+- CORS cho `https://tdung1807.github.io`; origin khác nhận 403.
+- SSE qua HTTPS trong 22 giây: 6 snapshot, sequence tăng từ 164 đến 169,
+  có heartbeat. Curl dừng do giới hạn thời gian kiểm tra, không phải mất kết nối.
+- Truy cập trực tiếp public IP của EC2 bị timeout; inbound chỉ cho security group
+  CloudFront VPC origin. Metrics giữ loopback.
+- Trên browser, frontend hiển thị `Kết nối trực tiếp`, dữ liệu người chơi và thời gian
+  cập nhật từ backend thật.
+- Đã xóa object và bucket upload tạm sau cài đặt.
+
+Đây là kiểm tra triển khai thực tế ngắn; không thay thế theo dõi vận hành dài hạn.
