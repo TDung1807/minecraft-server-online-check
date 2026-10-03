@@ -13,7 +13,6 @@ function render(data) {
  snapshot = data;
  el('state').textContent = states[data.state]; el('indicator').className = data.state;
  el('online').textContent = data.playersOnline ?? '—';
- el('capacity').textContent = `/ ${data.playersMax ?? '—'}`;
  el('capacity-fill').style.width = `${data.state === 'online' && data.playersMax > 0 ? Math.min(100, Math.max(0, data.playersOnline / data.playersMax * 100)) : 0}%`;
  const players = data.state === 'online' && data.playersOnline > 0 ? (data.players ?? []).filter(player => player.name?.trim()) : [];
  el('players-list').replaceChildren(...players.map(player => {
@@ -23,8 +22,7 @@ function render(data) {
   item.append(avatar, name); return item;
  }));
  el('players-empty').hidden = players.length > 0;
- el('sample-count').textContent = data.state !== 'online' ? 'Chờ dữ liệu mới' : `${players.length} tên được cung cấp`;
- el('players-message').textContent = data.state !== 'online' ? 'Chưa có dữ liệu người chơi hiện tại' : data.playersOnline === 0 ? 'Hiện chưa có người chơi online' : players.length === 0 ? 'Server không cung cấp tên người chơi' : players.length < data.playersOnline ? `Server cung cấp ${players.length} tên trong số ${data.playersOnline} người đang online` : '';
+ el('players-message').textContent = data.state !== 'online' ? 'Chưa có dữ liệu người chơi hiện tại' : data.playersOnline === 0 ? 'Hiện chưa có người chơi online' : players.length === 0 ? 'Server không cung cấp tên người chơi' : '';
  el('players-message').hidden = !el('players-message').textContent;
  el('version').textContent = data.version ?? '—'; el('duration').textContent = data.queryDurationMs == null ? '—' : `${Math.round(data.queryDurationMs)} ms`;
  el('updated').textContent = formatTime(data.lastSuccessAt); el('error').textContent = errors[data.errorCode] ?? '';

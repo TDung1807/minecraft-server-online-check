@@ -4,8 +4,8 @@
  <meta charset="utf-8">
  <meta name="viewport" content="width=device-width,initial-scale=1">
  <meta name="theme-color" content="#0a1530">
- <meta name="description" content="Theo dõi trạng thái server Minecraft Bora, số người chơi và danh sách người đang online — tự động cập nhật.">
- <title>Bora · Cùng nhau vào thế giới mới</title>
+ <meta name="description" content="Theo dõi trạng thái IT-Zone minecraft server, số người chơi và danh sách người đang online — tự động cập nhật.">
+ <title>IT-Zone minecraft server</title>
  <link rel="icon" href="./server-icon.png">
  <link rel="stylesheet" href="./style.css">
  <script src="./config.js" defer></script>
@@ -14,8 +14,7 @@
 <body>
  <a class="skip-link" href="#server-status">Đi đến trạng thái server</a>
  <header class="site-header">
-  <a class="brand" href="./" aria-label="Bora — Trang chủ"><img src="./server-icon.png" width="36" height="36" alt=""><span>Bora<span class="brand-note">Minecraft community</span></span></a>
-  <nav aria-label="Điều hướng"><a href="#server-status">Trạng thái server</a><a href="#players-section">Người đang chơi <span aria-hidden="true">↗</span></a></nav>
+  <a class="brand" href="./" aria-label="IT-Zone — Trang chủ"><img src="./server-icon.png" width="36" height="36" alt=""><span>IT-Zone<span class="brand-note">Minecraft community</span></span></a>
  </header>
  <main>
   <section class="hero" aria-labelledby="hero-heading">
@@ -26,9 +25,8 @@
     <span class="spark spark-pink"></span><span class="spark spark-yellow"></span><span class="spark spark-mint"></span><span class="spark spark-purple"></span>
    </div>
    <div class="hero-content">
-    <p class="eyebrow"><span class="tiny-block" aria-hidden="true"></span> MỘT SERVER. NHIỀU CÂU CHUYỆN.</p>
     <h1 id="hero-heading">make IT-Zone<br><span>great again.</span></h1>
-    <p class="hero-description">Thế giới vẫn ở đây. Chỉ còn thiếu bạn.<br>Xem ai đang online, rồi cùng nhau xây tiếp.</p>
+    <p class="hero-description">Thế giới vẫn ở đây. Chỉ còn thiếu bạn.<br>cùng IT-Zone xây nhà nào =))</p>
     <div class="hero-actions"><button class="button button-primary" id="copy-address" type="button"><span aria-hidden="true">▣</span> Sao chép IP server</button><a class="button button-outline" href="#players-section">Ai đang chơi? <span aria-hidden="true">↓</span></a></div>
     <p class="server-address">bora.pikamc.vn<span>:25005</span> <span class="edition">Java Edition</span></p>
     <p class="copy-feedback" id="copy-feedback" role="status"></p>
@@ -36,20 +34,20 @@
   </section>
   <div class="content-wrap">
    <section class="status-panel" id="server-status" aria-labelledby="status-heading">
-    <div class="panel-top"><div class="panel-title"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><h2 id="status-heading">Bora / Server status</h2></div><span class="stream-label" id="connection">Đang kết nối</span></div>
+    <div class="panel-top"><div class="panel-title"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><h2 id="status-heading">IT-Zone / Server status</h2></div><span class="stream-label" id="connection">Đang kết nối</span></div>
     <div class="status-body">
-     <div class="population"><div class="state" role="status"><i id="indicator" aria-hidden="true"></i><span id="state">Đang lấy dữ liệu</span></div><p class="metric-label">Người chơi online</p><div class="population-value"><strong id="online">—</strong><span id="capacity">/ —</span></div><div class="capacity-track" aria-hidden="true"><span id="capacity-fill"></span></div><p class="metric-note">Một thế giới vui hơn khi có nhau.</p></div>
+     <div class="population"><div class="state" role="status"><i id="indicator" aria-hidden="true"></i><span id="state">Đang lấy dữ liệu</span></div><p class="metric-label">Người chơi online</p><div class="population-value"><strong id="online">—</strong></div><div class="capacity-track" aria-hidden="true"><span id="capacity-fill"></span></div><p class="metric-note">Một thế giới vui hơn khi có nhau.</p></div>
      <div class="details"><div class="detail-card mint"><span class="detail-icon" aria-hidden="true">⌘</span><div><p>Phiên bản Minecraft</p><b id="version">—</b></div><span class="detail-tag">JAVA</span></div><div class="detail-card peach"><span class="detail-icon" aria-hidden="true">↯</span><div><p>Thời gian truy vấn</p><b id="duration">—</b></div></div><div class="detail-card lavender"><span class="detail-icon" aria-hidden="true">◷</span><div><p>Cập nhật thành công</p><b id="updated">—</b></div></div></div>
     </div>
     <div class="last" id="last" hidden><span>Dữ liệu cuối cùng</span><b id="last-value"></b></div>
     <p class="error-message" id="error" role="status"></p>
    </section>
    <section class="players-section" id="players-section" aria-labelledby="players-heading">
-    <div class="section-heading"><div><p class="eyebrow light-eyebrow">CÙNG CHƠI, CÙNG XÂY</p><h2 id="players-heading">Hôm nay có ai ở đây?</h2></div><span class="sample-badge" id="sample-count">Đang lấy dữ liệu</span></div>
-    <div class="players-panel"><div class="players-empty" id="players-empty" aria-hidden="true"><span class="pixel-face"><i></i><i></i></span><span class="empty-stars">✦</span></div><p id="players-message" role="status">Đang lấy dữ liệu người chơi…</p><ul id="players-list" aria-label="Danh sách tên người chơi server cung cấp"></ul><p class="sample-note">Tên người chơi do server cung cấp; danh sách có thể chỉ hiển thị một phần.</p></div>
+    <div class="section-heading"><div><p class="eyebrow light-eyebrow">CÙNG CHƠI, CÙNG XÂY</p><h2 id="players-heading">Hiện tại có ai ở đây?</h2></div></div>
+    <div class="players-panel"><div class="players-empty" id="players-empty" aria-hidden="true"><span class="pixel-face"><i></i><i></i></span><span class="empty-stars">✦</span></div><p id="players-message" role="status">Đang lấy dữ liệu người chơi…</p><ul id="players-list" aria-label="Danh sách người đang chơi"></ul></div>
    </section>
    <aside class="join-banner"><div><p class="eyebrow light-eyebrow">HẸN GẶP TRONG GAME</p><h2>Một block nhỏ.<br>Một thế giới của chúng ta.</h2><p>Mở Minecraft Java → Multiplayer → Add Server.<br>Dán địa chỉ server và bắt đầu câu chuyện của bạn.</p></div><div class="join-sticker" aria-hidden="true"><img src="./world-block.svg" width="120" height="132" alt=""><span>LET'S BUILD!</span></div></aside>
-   <footer><a class="footer-brand" href="./">Bora<span> / IT-Zone</span></a><p>Tự động cập nhật · Giờ Việt Nam (UTC+7)</p><a href="#server-status">Về trạng thái <span aria-hidden="true">↑</span></a></footer>
+   <footer><span class="copyright">Bản quyền thuộc về IT-Zone</span><p>Tự động cập nhật · Giờ Việt Nam (UTC+7)</p><a href="#server-status">Về trạng thái <span aria-hidden="true">↑</span></a></footer>
   </div>
  </main>
 </body>

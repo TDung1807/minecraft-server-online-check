@@ -121,25 +121,6 @@ section[id] {
   margin-top:1px;
 }
 
-nav {
-  display:flex;
-  gap:32px;
-  font-size:14px;
-  font-weight:500;
-}
-
-nav a {
-  padding:10px 0;
-}
-
-nav a:hover,footer a:hover {
-  color:var(--primary);
-}
-
-nav span {
-  margin-left:6px;
-}
-
 .hero {
   position:relative;
   isolation:isolate;
@@ -162,22 +143,6 @@ nav span {
   font-weight:600;
   letter-spacing:1.5px;
   line-height:1.5;
-}
-
-.hero .eyebrow {
-  color:#d6b6f6;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-}
-
-.tiny-block {
-  width:10px;
-  height:10px;
-  background:var(--yellow);
-  transform:rotate(-12deg);
-  border-radius:2px;
 }
 
 h1 {
@@ -499,12 +464,6 @@ h1 span {
   font-variant-numeric:tabular-nums;
 }
 
-.population-value>span {
-  font-size:20px;
-  color:var(--slate);
-  letter-spacing:-.5px;
-}
-
 .capacity-track {
   height:6px;
   background:var(--surface);
@@ -645,15 +604,6 @@ h1 span {
   margin-top:10px;
 }
 
-.sample-badge {
-  background:var(--sky);
-  color:#29435b;
-  border-radius:6px;
-  padding:7px 10px;
-  font-size:12px;
-  white-space:nowrap;
-}
-
 .players-panel {
   padding:28px;
   border:1px solid var(--hairline);
@@ -719,16 +669,6 @@ h1 span {
 #players-list li:nth-child(3n) .player-avatar {
   background:var(--peach);
   color:#793400;
-}
-
-.sample-note {
-  font-size:12px;
-  line-height:1.6;
-  color:var(--slate);
-  padding-top:20px;
-  margin-top:20px;
-  border-top:1px solid var(--hairline);
-  text-align:center;
 }
 
 .players-empty {
@@ -825,6 +765,11 @@ h1 span {
   box-shadow:3px 3px 0 var(--ink);
 }
 
+.copyright {
+  font-weight:500;
+  color:var(--ink);
+}
+
 footer {
   padding:32px 0;
   display:flex;
@@ -836,16 +781,8 @@ footer {
   line-height:1.6;
 }
 
-.footer-brand {
-  font-size:16px;
-  font-weight:600;
-  color:var(--ink);
-}
-
-.footer-brand span {
-  color:var(--slate);
-  font-weight:400;
-  font-size:12px;
+footer a:hover {
+  color:var(--primary);
 }
 
 footer>a:last-child {
@@ -932,15 +869,6 @@ footer>a:last-child {
   .brand-note {
     font-size:9px;
   }
-  nav {
-    gap:0;
-  }
-  nav a:first-child {
-    display:none;
-  }
-  nav a {
-    font-size:12px;
-  }
   .hero {
     padding:52px 20px 120px;
   }
@@ -951,10 +879,6 @@ footer>a:last-child {
   }
   .hero-description {
     font-size:16px;
-  }
-  .hero .eyebrow {
-    font-size:9px;
-    letter-spacing:1px;
   }
   .hero-actions {
     gap:8px;
