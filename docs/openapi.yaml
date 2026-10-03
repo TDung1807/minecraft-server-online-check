@@ -1,0 +1,78 @@
+openapi: 3.1.0
+info:
+  title: Minecraft Monitor
+  version: 1.0.0
+  description: In-memory status for one configured Minecraft Java server. All timestamps are UTC.
+paths:
+  /api/v1/status:
+    get:
+      summary: Latest cached snapshot; never triggers a Minecraft query
+      responses:
+        '200':
+          description: Current snapshot, including unavailable states
+          headers:
+            Cache-Control: {schema: {type: string, const: no-store}}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Snapshot'}
+        '403': {description: Origin rejected}
+        '429':
+          description: 60 requests per minute per IP exceeded
+          headers:
+            Retry-After: {schema: {type: string, const: '60'}}
+  /api/v1/events:
+    get:
+      summary: Stream latest snapshots with Server-Sent Events
+      description: See sse.md. No replay; reconnect receives the current snapshot.
+      responses:
+        '200':
+          description: SSE stream, retry 3000ms, heartbeat every 15s
+          content:
+            text/event-stream: {schema: {type: string}}
+        '403': {description: Origin rejected}
+        '429':
+          description: Global 500 or per-IP 5 stream limit exceeded
+          headers:
+            Retry-After: {schema: {type: string, const: '60'}}
+  /health/live:
+    get:
+      responses:
+        '200': {description: Process is serving requests}
+  /health/ready:
+    get:
+      responses:
+        '200': {description: Poller and snapshot storage initialized, regardless of Minecraft availability}
+        '503': {description: Poller not initialized or stopping}
+components:
+  schemas:
+    Known:
+      type: object
+      required: [playersOnline, playersMax, version, queryDurationMs, observedAt]
+      properties:
+        playersOnline: {type: integer, minimum: 0}
+        playersMax: {type: integer, minimum: 0}
+        version: {type: string}
+        queryDurationMs: {type: number, minimum: 0}
+        observedAt: {type: string, format: date-time}
+    Snapshot:
+      type: object
+      required: [server, state, playersOnline, playersMax, version, queryDurationMs, lastAttemptAt, lastSuccessAt, consecutiveFailures, errorCode, lastKnown, sequence, staleAfterMs]
+      properties:
+        server: {type: string, examples: ['bora.pikamc.vn:25005']}
+        state: {type: string, enum: [unknown, online, stale, unreachable]}
+        playersOnline: {type: [integer, 'null'], minimum: 0}
+        playersMax: {type: [integer, 'null'], minimum: 0}
+        version: {type: [string, 'null']}
+        queryDurationMs: {type: [number, 'null'], minimum: 0}
+        lastAttemptAt: {type: [string, 'null'], format: date-time}
+        lastSuccessAt: {type: [string, 'null'], format: date-time}
+        consecutiveFailures: {type: integer, minimum: 0}
+        errorCode:
+          type: [string, 'null']
+          enum: [null, timeout, connection_error, dns_error, invalid_response, data_expired]
+        lastKnown:
+          oneOf:
+            - {$ref: '#/components/schemas/Known'}
+            - {type: 'null'}
+        sequence: {type: integer, minimum: 0, description: Increasing within one process; resets on restart}
+        staleAfterMs: {type: integer, minimum: 1, description: Freshness threshold for client-side expiry during a transport outage}

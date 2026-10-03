@@ -1,0 +1,17 @@
+groups:
+  - name: minecraft-monitor
+    rules:
+      - alert: MinecraftStatusNotFresh
+        expr: (mc_data_age_seconds > 60) or ((mc_data_age_seconds < 0) and (time() - process_start_time_seconds > 60))
+        for: 0s
+        labels:
+          severity: warning
+        annotations:
+          summary: Minecraft monitor has no fresh status
+      - alert: MinecraftMonitorDown
+        expr: up{job="minecraft-monitor"} == 0
+        for: 60s
+        labels:
+          severity: critical
+        annotations:
+          summary: Minecraft monitor metrics endpoint is unavailable

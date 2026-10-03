@@ -1,0 +1,27 @@
+[Unit]
+Description=Minecraft status monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=minecraft-monitor
+Group=minecraft-monitor
+EnvironmentFile=/etc/minecraft-monitor.env
+ExecStart=/opt/minecraft-monitor/minecraft-monitor
+Restart=always
+RestartSec=3
+TimeoutStopSec=15
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+MemoryMax=256M
+CPUQuota=100%
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target

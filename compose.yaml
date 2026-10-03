@@ -1,0 +1,48 @@
+services:
+  backend:
+    build: .
+    restart: unless-stopped
+    environment:
+      MC_HOST: ${MC_HOST:-bora.pikamc.vn}
+      MC_PORT: ${MC_PORT:-25005}
+      POLL_INTERVAL: ${POLL_INTERVAL:-5s}
+      QUERY_TIMEOUT: ${QUERY_TIMEOUT:-3s}
+      STALE_AFTER: ${STALE_AFTER:-10s}
+      HTTP_ADDR: 0.0.0.0:8080
+      METRICS_ADDR: 0.0.0.0:9090
+      WEB_ORIGIN: https://${SITE_DOMAIN:?Set SITE_DOMAIN in .env}
+      TRUST_PROXY: 'true'
+    ports:
+      - '127.0.0.1:9090:9090'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    mem_limit: 256m
+    cpus: 1.0
+    stop_grace_period: 15s
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://127.0.0.1:8080/health/ready']
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: '10m', max-file: '3'}
+  caddy:
+    image: caddy:2.10.2-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+    restart: unless-stopped
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?Set SITE_DOMAIN in .env}
+    ports: ['80:80', '443:443', '443:443/udp']
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      backend: {condition: service_healthy}
+    logging:
+      driver: json-file
+      options: {max-size: '10m', max-file: '3'}
+volumes:
+  caddy_data:
+  caddy_config:
