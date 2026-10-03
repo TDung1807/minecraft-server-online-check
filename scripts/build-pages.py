@@ -1,4 +1,5 @@
 """Build the static frontend for GitHub Pages (no third-party dependencies)."""
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -20,5 +21,17 @@ shutil.copytree(root / "internal" / "httpapi" / "web", output)
     "window.MC_CONFIG = " + json.dumps({"apiBaseUrl": api_base}) + ";\n",
     encoding="utf-8",
 )
+# GitHub Pages caches assets for ten minutes. Give changed assets a new URL so
+# freshly deployed HTML cannot execute a cached script from an older layout.
+# Keep unversioned copies available for HTML cached before this change.
+index = output / "index.html"
+html = index.read_text(encoding="utf-8")
+for name in ("style.css", "config.js", "app.js"):
+    asset = output / name
+    digest = hashlib.sha256(asset.read_bytes()).hexdigest()[:16]
+    versioned_name = f"{asset.stem}.{digest}{asset.suffix}"
+    shutil.copyfile(asset, output / versioned_name)
+    html = html.replace(f'"./{name}"', f'"./{versioned_name}"')
+index.write_text(html, encoding="utf-8")
 (output / ".nojekyll").touch()
 print(f"Frontend built in {output}")

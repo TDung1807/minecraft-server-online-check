@@ -34,9 +34,11 @@ function render(data) {
 async function fetchStatus() {
  if (requestPending) return; requestPending = true;
  const generation = streamGeneration;
- try { const response = await fetch(`${apiBase}/api/v1/status`, { cache: 'no-store', signal: AbortSignal.timeout(5000) }); if (!response.ok) throw new Error(response.status); const data = await response.json(); if (generation === streamGeneration && (!snapshot || data.sequence >= snapshot.sequence || fallback)) render(data); }
- catch { if (generation === streamGeneration) { el('error').textContent = 'Mất kết nối website'; connection('Mất kết nối'); } }
+ let data;
+ try { const response = await fetch(`${apiBase}/api/v1/status`, { cache: 'no-store', signal: AbortSignal.timeout(5000) }); if (!response.ok) throw new Error(response.status); data = await response.json(); }
+ catch { if (generation === streamGeneration) { el('error').textContent = 'Mất kết nối website'; connection('Mất kết nối'); } return; }
  finally { requestPending = false; }
+ if (generation === streamGeneration && (!snapshot || data.sequence >= snapshot.sequence || fallback)) render(data);
 }
 function connect() {
  source?.close(); source = new EventSource(`${apiBase}/api/v1/events`);

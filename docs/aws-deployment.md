@@ -67,6 +67,9 @@ API_BASE_URL=https://d1998bjchbfps7.cloudfront.net python3 scripts/build-pages.p
 
 Output nằm ở `artifacts/pages`, được git-ignore. `config.js` chứa URL API public,
 không chứa AWS credential. Đường dẫn asset tương đối hỗ trợ Pages dưới đường dẫn repo.
+HTML sử dụng tên file CSS/JavaScript có hash nội dung để tránh cache GitHub Pages
+trộn script cũ với giao diện mới sau deploy. Bản tên gốc vẫn được giữ cho HTML
+đã được cache trước đó.
 
 ## Vận hành backend
 
