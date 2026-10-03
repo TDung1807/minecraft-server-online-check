@@ -12,26 +12,28 @@ import (
 )
 
 type Known struct {
-	PlayersOnline   int       `json:"playersOnline"`
-	PlayersMax      int       `json:"playersMax"`
-	Version         string    `json:"version"`
-	QueryDurationMS float64   `json:"queryDurationMs"`
-	ObservedAt      time.Time `json:"observedAt"`
+	Players         []minecraft.Player `json:"players"`
+	PlayersOnline   int                `json:"playersOnline"`
+	PlayersMax      int                `json:"playersMax"`
+	Version         string             `json:"version"`
+	QueryDurationMS float64            `json:"queryDurationMs"`
+	ObservedAt      time.Time          `json:"observedAt"`
 }
 type Snapshot struct {
-	StaleAfterMS        int64      `json:"staleAfterMs"`
-	Server              string     `json:"server"`
-	State               string     `json:"state"`
-	PlayersOnline       *int       `json:"playersOnline"`
-	PlayersMax          *int       `json:"playersMax"`
-	Version             *string    `json:"version"`
-	QueryDurationMS     *float64   `json:"queryDurationMs"`
-	LastAttemptAt       *time.Time `json:"lastAttemptAt"`
-	LastSuccessAt       *time.Time `json:"lastSuccessAt"`
-	ConsecutiveFailures int        `json:"consecutiveFailures"`
-	ErrorCode           *string    `json:"errorCode"`
-	LastKnown           *Known     `json:"lastKnown"`
-	Sequence            uint64     `json:"sequence"`
+	Players             []minecraft.Player `json:"players"`
+	StaleAfterMS        int64              `json:"staleAfterMs"`
+	Server              string             `json:"server"`
+	State               string             `json:"state"`
+	PlayersOnline       *int               `json:"playersOnline"`
+	PlayersMax          *int               `json:"playersMax"`
+	Version             *string            `json:"version"`
+	QueryDurationMS     *float64           `json:"queryDurationMs"`
+	LastAttemptAt       *time.Time         `json:"lastAttemptAt"`
+	LastSuccessAt       *time.Time         `json:"lastSuccessAt"`
+	ConsecutiveFailures int                `json:"consecutiveFailures"`
+	ErrorCode           *string            `json:"errorCode"`
+	LastKnown           *Known             `json:"lastKnown"`
+	Sequence            uint64             `json:"sequence"`
 }
 type Store struct {
 	mu          sync.Mutex
@@ -80,6 +82,7 @@ func (s *Store) invalidate(state string) {
 	s.snapshot.State = state
 	s.snapshot.PlayersOnline = nil
 	s.snapshot.PlayersMax = nil
+	s.snapshot.Players = nil
 	s.snapshot.Version = nil
 	s.snapshot.QueryDurationMS = nil
 }
@@ -112,7 +115,8 @@ func (s *Store) Record(result minecraft.Result, err error, attempted, now time.T
 		}
 		s.invalidate(state)
 	} else {
-		known := &Known{result.Online, result.Max, result.Version, result.DurationMS, now}
+		players := append([]minecraft.Player{}, result.Players...)
+		known := &Known{Players: players, PlayersOnline: result.Online, PlayersMax: result.Max, Version: result.Version, QueryDurationMS: result.DurationMS, ObservedAt: now}
 		s.snapshot.LastKnown = known
 		s.snapshot.LastSuccessAt = &now
 		s.snapshot.State = "online"
@@ -120,6 +124,7 @@ func (s *Store) Record(result minecraft.Result, err error, attempted, now time.T
 		s.snapshot.ErrorCode = nil
 		s.snapshot.PlayersOnline = &known.PlayersOnline
 		s.snapshot.PlayersMax = &known.PlayersMax
+		s.snapshot.Players = known.Players
 		s.snapshot.Version = &known.Version
 		s.snapshot.QueryDurationMS = &known.QueryDurationMS
 	}

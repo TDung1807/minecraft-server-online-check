@@ -75,6 +75,18 @@ func TestQuery(t *testing.T) {
 		})
 	}
 }
+func TestPlayerSample(t *testing.T) {
+	client, done := fake(t, func(c net.Conn) {
+		packet := pk.Marshal(0, pk.String(`{"players":{"online":3,"max":20,"sample":[{"name":"Alex","id":"00000000-0000-0000-0000-000000000001"}]}}`))
+		packet.Pack(c, -1)
+	})
+	r, err := client.Query(context.Background())
+	if err != nil || r.Online != 3 || len(r.Players) != 1 || r.Players[0].Name != "Alex" || r.Players[0].ID != "00000000-0000-0000-0000-000000000001" {
+		t.Fatalf("player sample lost: %+v, %v", r, err)
+	}
+	<-done
+}
+
 func TestTransportFailures(t *testing.T) {
 	for _, mode := range []string{"oversize", "string_bomb", "timeout", "closed", "cancel"} {
 		t.Run(mode, func(t *testing.T) {

@@ -42,6 +42,30 @@ func TestStates(t *testing.T) {
 		t.Fatal("expire")
 	}
 }
+func TestPlayersFreshness(t *testing.T) {
+	s := New("test")
+	now := time.Now()
+	players := []minecraft.Player{{Name: "Alex", ID: "uuid"}}
+	s.Record(minecraft.Result{Online: 3, Players: players}, nil, now, now)
+	players[0].Name = "changed"
+	snap := s.Snapshot()
+	if len(snap.Players) != 1 || snap.Players[0].Name != "Alex" {
+		t.Fatal("player sample was not copied", snap)
+	}
+	s.Expire(now.Add(11*time.Second), 10*time.Second)
+	if snap = s.Snapshot(); snap.Players != nil || snap.LastKnown.Players[0].Name != "Alex" {
+		t.Fatal("stale player sample is current", snap)
+	}
+	s.Record(minecraft.Result{Online: 0}, nil, now, now)
+	if snap = s.Snapshot(); snap.Players == nil || len(snap.Players) != 0 {
+		t.Fatal("empty online player list", snap)
+	}
+	s.Record(minecraft.Result{}, errors.New("offline"), now, now)
+	if s.Snapshot().Players != nil {
+		t.Fatal("failed query retained current players")
+	}
+}
+
 func TestLatestOnly(t *testing.T) {
 	s := New("test")
 	ch, cancel := s.Subscribe()

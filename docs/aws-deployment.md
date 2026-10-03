@@ -105,3 +105,22 @@ Không tăng replica khi chưa có poller leader/fan-out chung.
 - Đã xóa object và bucket upload tạm sau cài đặt.
 
 Đây là kiểm tra triển khai thực tế ngắn; không thay thế theo dõi vận hành dài hạn.
+
+## Cập nhật giao diện và player sample — 03/10/2026
+
+- Giao diện dùng token `DESIGN.md`, nền navy, CTA tím, thẻ pastel và SVG khối
+  Minecraft nội bộ; không tải thêm thư viện hoặc ảnh người chơi từ bên thứ ba.
+- Sao chép địa chỉ server, hiển thị số online/tối đa và tên từ `players.sample`.
+  Danh sách có thể thiếu tên; khi dữ liệu cũ hoặc không truy vấn được, số hiện tại
+  chuyển thành `—` và tên hiện tại được xóa.
+- Đã kiểm tra browser ở desktop 1440px và mobile 390px/320px, clipboard,
+  tên chứa markup, sample rỗng, trạng thái unknown/stale/unreachable, hết hạn
+  dữ liệu và `prefers-reduced-motion`; không có lỗi JavaScript hoặc tràn ngang.
+  Đây là kiểm tra bằng snapshot giả lập; số người chơi thực tế luôn lấy từ API.
+- `go test -race -count=1 ./...`, `go vet ./...` và build `linux/arm64` đạt.
+- Backend cập nhật qua SSM, kiểm tra SHA-256 và health, giữ binary dự phòng tại
+  `/opt/minecraft-monitor/minecraft-monitor.previous` để rollback.
+- SHA-256 binary đã cài:
+  `477e74cc30cb2137d95b4d45631efc07c01e7c127f9caa89b6e3c89a1858b34e`.
+- Sau restart, health báo ready, dịch vụ monitor/nginx active và API HTTPS
+  trả cả số người chơi lẫn tên do server Minecraft cung cấp.

@@ -45,10 +45,20 @@ paths:
         '503': {description: Poller not initialized or stopping}
 components:
   schemas:
+    Player:
+      type: object
+      required: [name, id]
+      properties:
+        name: {type: string}
+        id: {type: string, description: UUID reported by the server}
     Known:
       type: object
-      required: [playersOnline, playersMax, version, queryDurationMs, observedAt]
+      required: [players, playersOnline, playersMax, version, queryDurationMs, observedAt]
       properties:
+        players:
+          type: array
+          description: Player sample reported by the server; may be empty or incomplete.
+          items: {$ref: '#/components/schemas/Player'}
         playersOnline: {type: integer, minimum: 0}
         playersMax: {type: integer, minimum: 0}
         version: {type: string}
@@ -56,8 +66,12 @@ components:
         observedAt: {type: string, format: date-time}
     Snapshot:
       type: object
-      required: [server, state, playersOnline, playersMax, version, queryDurationMs, lastAttemptAt, lastSuccessAt, consecutiveFailures, errorCode, lastKnown, sequence, staleAfterMs]
+      required: [server, state, players, playersOnline, playersMax, version, queryDurationMs, lastAttemptAt, lastSuccessAt, consecutiveFailures, errorCode, lastKnown, sequence, staleAfterMs]
       properties:
+        players:
+          type: [array, 'null']
+          description: Current server-reported player sample; null when status is unavailable. May be empty or incomplete.
+          items: {$ref: '#/components/schemas/Player'}
         server: {type: string, examples: ['bora.pikamc.vn:25005']}
         state: {type: string, enum: [unknown, online, stale, unreachable]}
         playersOnline: {type: [integer, 'null'], minimum: 0}

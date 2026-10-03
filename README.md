@@ -1,6 +1,6 @@
 # Minecraft Monitor
 
-Backend Go theo dõi `bora.pikamc.vn:25005` qua Minecraft Java TCP status ping. Một poller chung truy vấn mỗi 5 giây; REST đọc RAM và SSE đẩy snapshot. Có giao diện trạng thái tối giản được nhúng trong binary, không cần Node hay database.
+Backend Go theo dõi `bora.pikamc.vn:25005` qua Minecraft Java TCP status ping. Một poller chung truy vấn mỗi 5 giây; REST đọc RAM và SSE đẩy snapshot. Giao diện theo token trong `DESIGN.md`: nền navy, thẻ pastel, minh họa khối Minecraft, sao chép IP và danh sách người chơi cập nhật trực tiếp. Frontend được nhúng trong binary và deploy riêng lên GitHub Pages, không cần Node hay database. Hiệu ứng tôn trọng `prefers-reduced-motion`.
 
 Kết quả kiểm chứng local, Docker, HTTPS/SSE và bài tải 30 phút: [docs/verification.md](docs/verification.md).
 
@@ -37,7 +37,7 @@ curl -N http://127.0.0.1:8080/api/v1/events
 | TRUST_PROXY | false | Chỉ bật sau proxy tin cậy, peer loopback/private |
 | SITE_DOMAIN | không có | Domain HTTPS cho Docker/Caddy |
 
-Ứng dụng không tự đọc `.env` khi chạy `go run`; Docker Compose đọc `.env`. Số online là số server công bố, không xác minh được plugin làm giả hoặc phạm vi cụm server sau proxy. Danh sách sample không được dùng để đếm. `queryDurationMs` là thời gian truy vấn từ backend, không phải latency của người xem.
+Ứng dụng không tự đọc `.env` khi chạy `go run`; Docker Compose đọc `.env`. Số online là số server công bố, không xác minh được plugin làm giả hoặc phạm vi cụm server sau proxy. API trả thêm `players` gồm tên và UUID từ `players.sample`; giao diện hiển thị tên và tự cập nhật qua SSE. Server có thể ẩn hoặc chỉ trả một phần danh sách. Danh sách sample không được dùng để đếm và bị xóa khỏi dữ liệu hiện tại khi trạng thái cũ hoặc không truy vấn được. `queryDurationMs` là thời gian truy vấn từ backend, không phải latency của người xem.
 
 ## Trạng thái và API
 

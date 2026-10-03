@@ -17,11 +17,17 @@ import (
 
 var ErrInvalid = errors.New("invalid minecraft status")
 
+type Player struct {
+	Name string `json:"name"`
+	ID   string `json:"id"`
+}
+
 type Result struct {
 	Online     int
 	Max        int
 	Version    string
 	DurationMS float64
+	Players    []Player
 }
 type Client struct {
 	Host    string
@@ -81,8 +87,9 @@ func (c Client) Query(parent context.Context) (result Result, err error) {
 	raw := payload[len(payload)-body.Len():]
 	var data struct {
 		Players *struct {
-			Online *int `json:"online"`
-			Max    *int `json:"max"`
+			Online *int     `json:"online"`
+			Max    *int     `json:"max"`
+			Sample []Player `json:"sample"`
 		} `json:"players"`
 		Version struct {
 			Name string `json:"name"`
@@ -100,5 +107,5 @@ func (c Client) Query(parent context.Context) (result Result, err error) {
 	if err = ctx.Err(); err != nil {
 		return Result{}, err
 	}
-	return Result{*data.Players.Online, *data.Players.Max, data.Version.Name, float64(time.Since(start).Microseconds()) / 1000}, nil
+	return Result{Online: *data.Players.Online, Max: *data.Players.Max, Version: data.Version.Name, DurationMS: float64(time.Since(start).Microseconds()) / 1000, Players: data.Players.Sample}, nil
 }
